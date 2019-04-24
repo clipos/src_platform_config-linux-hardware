@@ -75,7 +75,7 @@ generate_config() {
 	popd >/dev/null
 
 	# check blacklisted options
-	if $DEBUG; then
+	if ! $DEBUG; then
 		while read config; do
 			if grep -q "^${config}=" "${S}/.config"; then
 				unwanted+=("${config}")
