@@ -75,7 +75,7 @@ generate_config() {
 	popd >/dev/null
 
 	# check blacklisted options
-	if ! $DEBUG; then
+	if [[ "$DEBUG" -eq 0 ]]; then
 		while read config; do
 			if grep -q "^${config}=" "${S}/.config"; then
 				unwanted+=("${config}")
@@ -126,9 +126,7 @@ if [[ -z "${ARCH:-}" ]]; then
 	echo "WARNING: ARCH env variable was not specified, defaulting to x86_64"
 fi
 
-if [[ -z "${DEBUG:-}" ]]; then
-	DEBUG=false
-fi
+: ${DEBUG:=0}
 
 if [[ ! -f "${S}/Makefile" ]]; then
 	echo "Need to be run in a Linux source directory." >&2
