@@ -15,7 +15,7 @@ i915
 intel_cstate
 intel_pch_thermal
 intel_powerclamp
-intel_rapl
+intel_rapl_msr
 intel_rapl_perf
 intel_uncore
 iwlmvm

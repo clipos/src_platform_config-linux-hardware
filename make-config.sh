@@ -17,7 +17,7 @@ MINICONFIG_SORT=""
 
 # initial miniconfig idea from Rob Landley and Piotr Karbowski (foo-miniconfig)
 generate_config() {
-	local config configset subconfigset config_suffix
+	local config configset subconfigset config_suffix err_msg
 	local missing=()
 	local unwanted=()
 	local gcc=false
@@ -70,21 +70,33 @@ generate_config() {
 		if $gcc ; then
 			echo "HINT: You need a gcc with plugin support. For some distros (e.g. Debian), you may need to install the supporting headers explicitly in addition to the normal gcc package."
 		fi
-		die "Missing ${#missing[@]} entry from ${MINICONFIG_SORT}: ${missing[*]}"
+		err_msg="Missing ${#missing[@]} entry from ${MINICONFIG_SORT}: ${missing[*]}"
+		if [[ "$DEBUG" -eq 0 ]]; then
+			die "$err_msg"
+		else
+			warn "$err_msg"
+		fi
 	fi
 	popd >/dev/null
 
 	# check blacklisted options
-	if [[ "$DEBUG" -eq 0 ]]; then
-		while read config; do
-			if grep -q "^${config}=" "${S}/.config"; then
-				unwanted+=("${config}")
-			fi
-		done < "${CONFIGDIR}/kernel_config/blacklist"
-		if [[ "${#unwanted[@]}" -ne 0 ]]; then
-			die "${#unwanted[@]} entry blacklisted but appearing in final .config: ${unwanted[*]}"
+	while read config; do
+		if grep -q "^${config}=" "${S}/.config"; then
+			unwanted+=("${config}")
+		fi
+	done < "${CONFIGDIR}/kernel_config/blacklist"
+	if [[ "${#unwanted[@]}" -ne 0 ]]; then
+		err_msg="${#unwanted[@]} entry blacklisted but appearing in final .config: ${unwanted[*]}"
+		if [[ "$DEBUG" -eq 0 ]]; then
+			die "$err_msg"
+		else
+			warn "$err_msg"
 		fi
 	fi
+}
+
+warn() {
+	echo "WARNING: $*" >&2
 }
 
 die() {
