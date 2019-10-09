@@ -12,12 +12,8 @@ fan
 hso
 i2c_i801
 i915
-intel_cstate
 intel_pch_thermal
 intel_powerclamp
-intel_rapl_msr
-intel_rapl_perf
-intel_uncore
 iwlmvm
 mmc_block
 mousedev
