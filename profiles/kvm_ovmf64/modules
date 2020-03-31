@@ -3,6 +3,7 @@ bochs_drm
 button
 ehci_pci
 i8042
+kvm_intel
 mousedev
 psmouse
 qemu_fw_cfg
